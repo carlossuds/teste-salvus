@@ -7,6 +7,7 @@ class FileController {
     const file = await File.create({
       name,
       path,
+      user_id: req.userId,
     });
 
     return res.json(file);
