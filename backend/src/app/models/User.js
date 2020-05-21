@@ -13,6 +13,8 @@ class User extends Model {
         phone: Sequelize.STRING,
         role: Sequelize.STRING,
         experience: Sequelize.INTEGER,
+        city: Sequelize.STRING,
+        state: Sequelize.STRING,
       },
       { sequelize }
     );

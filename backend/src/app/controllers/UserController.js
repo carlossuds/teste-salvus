@@ -12,6 +12,8 @@ class UserController {
       phone: Yup.string().required(),
       role: Yup.string().required(),
       experience: Yup.number().required(),
+      city: Yup.string().required(),
+      state: Yup.string().required(),
     });
 
     if (!(await schema.isValid(req.body))) {
@@ -36,6 +38,8 @@ class UserController {
       phone: Yup.string().required(),
       role: Yup.string().required(),
       experience: Yup.number().required(),
+      city: Yup.string().required(),
+      state: Yup.string().required(),
       oldPassword: Yup.string().required().min(6),
       password: Yup.string().required().min(6),
       confirmPassword: Yup.string().when('password', (password, field) =>
