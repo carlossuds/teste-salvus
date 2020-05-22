@@ -8,7 +8,7 @@ class UserController {
       email: Yup.string().email().required(),
       password: Yup.string().required().min(6),
       name: Yup.string().required(),
-      age: Yup.number().required(),
+      birthday: Yup.date().required(),
       phone: Yup.string().required(),
       role: Yup.string().required(),
       experience: Yup.number().required(),
@@ -34,7 +34,7 @@ class UserController {
     const schema = Yup.object().shape({
       email: Yup.string().email().required(),
       name: Yup.string().required(),
-      age: Yup.number().required(),
+      birthday: Yup.date().required(),
       phone: Yup.string().required(),
       role: Yup.string().required(),
       experience: Yup.number().required(),
