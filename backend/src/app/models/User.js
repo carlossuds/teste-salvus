@@ -12,9 +12,11 @@ class User extends Model {
         birthday: Sequelize.DATE,
         phone: Sequelize.STRING,
         role: Sequelize.STRING,
+        specialty: Sequelize.STRING,
         experience: Sequelize.INTEGER,
         city: Sequelize.STRING,
         state: Sequelize.STRING,
+        displacement: Sequelize.INTEGER,
       },
       { sequelize }
     );

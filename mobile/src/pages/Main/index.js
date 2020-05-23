@@ -82,12 +82,20 @@ export default function Main({navigation}) {
             <Text>{user.role}</Text>
           </Duo>
           <Duo>
+            <Strong>Especialidade: </Strong>
+            <Text>{user.specialty}</Text>
+          </Duo>
+          <Duo>
             <Strong>Experiência: </Strong>
-            <Text>{user.experience}</Text>
+            <Text>{user.experience + ' anos'}</Text>
           </Duo>
           <Duo>
             <Strong>Localização: </Strong>
             <Text>{user.city + ' - ' + user.state}</Text>
+          </Duo>
+          <Duo>
+            <Strong>Área de atuação: </Strong>
+            <Text>{user.displacement + ' Km'}</Text>
           </Duo>
         </Division>
 
@@ -97,7 +105,7 @@ export default function Main({navigation}) {
             {files !== null ? (
               <Text>{files.length + ' arquivos'}</Text>
             ) : (
-              <Text style={{position: 'relative', top: '10%', left: '400%'}}>
+              <Text style={{position: 'relative', top: '5%', left: '400%'}}>
                 Ainda não há arquivos
               </Text>
             )}

@@ -33,6 +33,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      specialty: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
       experience: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -43,6 +47,10 @@ module.exports = {
       },
       state: {
         type: Sequelize.STRING,
+        allowNull: false,
+      },
+      displacement: {
+        type: Sequelize.INTEGER,
         allowNull: false,
       },
       created_at: {

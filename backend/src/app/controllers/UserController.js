@@ -11,9 +11,11 @@ class UserController {
       birthday: Yup.date().required(),
       phone: Yup.string().required(),
       role: Yup.string().required(),
+      specialty: Yup.string().required(),
       experience: Yup.number().required(),
       city: Yup.string().required(),
       state: Yup.string().required(),
+      displacement: Yup.number().required(),
     });
 
     if (!(await schema.isValid(req.body))) {
@@ -37,9 +39,11 @@ class UserController {
       birthday: Yup.date().required(),
       phone: Yup.string().required(),
       role: Yup.string().required(),
+      specialty: Yup.string().required(),
       experience: Yup.number().required(),
       city: Yup.string().required(),
       state: Yup.string().required(),
+      displacement: Yup.number().required(),
       oldPassword: Yup.string().required().min(6),
       password: Yup.string().required().min(6),
       confirmPassword: Yup.string().when('password', (password, field) =>

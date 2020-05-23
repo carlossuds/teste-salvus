@@ -1,6 +1,5 @@
 import {Alert} from 'react-native';
 import {takeLatest, call, put, all} from 'redux-saga/effects';
-import {parse} from 'date-fns';
 import api from '../../../services/api';
 // import history from '~/services/history';
 import {signInSuccess, signFailure} from './actions';
@@ -38,8 +37,10 @@ export function* signUp({payload}) {
       repeat,
       role,
       experience,
+      specialty,
       city,
       state,
+      displacement,
     } = payload;
 
     console.tron.log(payload);
@@ -48,8 +49,8 @@ export function* signUp({payload}) {
 
     let newBDay = birthday.split('/').reverse().join('-');
 
-    console.tron.log(typeof newBDay);
-    console.tron.log(newBDay);
+    //console.tron.log(typeof newBDay);
+    //console.tron.log(newBDay);
 
     yield call(api.post, 'users', {
       name,
@@ -59,8 +60,10 @@ export function* signUp({payload}) {
       password,
       role,
       experience,
+      specialty,
       city,
       state,
+      displacement,
     });
     Alert.alert('Great! You can Sign in now');
   } catch (err) {

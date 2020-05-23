@@ -31,6 +31,7 @@ export default function SignIn({navigation}) {
             <Label title="E-mail" />
             <Input
               name="email"
+              keyboardType="email-address"
               returnKeyType="next"
               onSubmitEditing={() =>
                 formRef.current.getFieldRef('password').focus()

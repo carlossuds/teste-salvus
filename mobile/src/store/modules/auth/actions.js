@@ -21,8 +21,10 @@ export function signUpRequest(
   repeat,
   role,
   experience,
+  specialty,
   city,
   state,
+  displacement,
 ) {
   return {
     type: '@auth/SIGN_UP_REQUEST',
@@ -35,8 +37,10 @@ export function signUpRequest(
       repeat,
       role,
       experience,
+      specialty,
       city,
       state,
+      displacement,
     },
   };
 }

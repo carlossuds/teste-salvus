@@ -19,19 +19,14 @@ export default function SignUpProfessional({route, navigation}) {
 
   const {name, email, birthday, phone, password, repeat} = route.params;
 
-  function handleSubmit({role, experience, city, state}) {
-    /*console.tron.log({
-      name,
-      email,
-      birthday,
-      phone,
-      password,
-      repeat,
-      role,
-      experience,
-      city,
-      state,
-    });*/
+  function handleSubmit({
+    role,
+    experience,
+    specialty,
+    city,
+    state,
+    displacement,
+  }) {
     dispatch(
       signUpRequest(
         name,
@@ -42,8 +37,10 @@ export default function SignUpProfessional({route, navigation}) {
         repeat,
         role,
         experience,
+        specialty,
         city,
         state,
+        displacement,
       ),
     );
     navigation.navigate('SignIn');
@@ -62,8 +59,18 @@ export default function SignUpProfessional({route, navigation}) {
                 name="role"
                 returnKeyType="next"
                 onSubmitEditing={() =>
-                  formRef.current.getFieldRef('experience').focus()
+                  formRef.current.getFieldRef('specialty').focus()
                 }
+              />
+            </Duo>
+            <Duo>
+              <Label title="Especialidade" />
+              <Input
+                name="specialty"
+                returnKeyType="next"
+                onSubmitEditing={() => {
+                  formRef.current.getFieldRef('experience').focus();
+                }}
               />
             </Duo>
             <Duo>
@@ -87,11 +94,21 @@ export default function SignUpProfessional({route, navigation}) {
                 }
               />
             </Duo>
-
             <Duo>
               <Label title="Estado" />
               <Input
                 name="state"
+                returnKeyType="next"
+                onSubmitEditing={() =>
+                  formRef.current.getFieldRef('displacement').focus()
+                }
+              />
+            </Duo>
+            <Duo>
+              <Label title="Deslocamento (em Km)" />
+              <Input
+                name="displacement"
+                keyboardType="numeric"
                 onSubmitEditing={() => formRef.current.submitForm()}
               />
             </Duo>
