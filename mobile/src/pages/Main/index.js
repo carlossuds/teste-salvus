@@ -1,102 +1,113 @@
 import React, {useRef, useState, useEffect} from 'react';
 import {Image, TouchableOpacity, ScrollView} from 'react-native';
-import {Form} from '@unform/core';
+import {useSelector} from 'react-redux';
+import ImagePicker from 'react-native-image-picker';
 
-import MiIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import OcIcon from 'react-native-vector-icons/Octicons';
-import FeIcon from 'react-native-vector-icons/Feather';
+import {differenceInYears, parseISO} from 'date-fns';
 
-import Label from '../../components/Label';
-import Input from '../../components/Input';
-
+import Button from '../../components/Button';
 import api from '~/services/api';
-
-import {Container, FormView, InputDiv, List, Item} from './styles';
-
+import {Container, Content, Division, Title, Strong, Text, Duo} from './styles';
 import logo from '../../assets/salvus.png';
 
 export default function Main({navigation}) {
-  const formRef = useRef(null);
+  const [imgSource, setImgSource] = useState('');
 
-  const [todos, setTodos] = useState([]);
-  const [refresh, setRefresh] = useState(false);
+  const [user, setUser] = useState(useSelector((state) => state.user.profile));
+  const [files, setFiles] = useState(null);
 
   useEffect(() => {
-    async function loadTodos() {
-      const response = await api.get('/todos');
-      formRef.current.reset();
-      setTodos(response.data);
+    function loadUser() {
+      const {birthday} = user;
+
+      const age = differenceInYears(new Date(), parseISO(birthday));
+
+      setUser({...user, age});
     }
-    loadTodos();
-    console.tron.log(todos);
+    loadUser();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [refresh]);
+  }, []);
 
-  async function handleSubmit({title}) {
-    try {
-      await api.post('/todos', {title: title});
-      setRefresh(!refresh);
-    } catch (err) {}
-  }
+  function pickImage() {
+    ImagePicker.showImagePicker((response) => {
+      console.log('Response = ', response);
 
-  async function handleDelete(id) {
-    try {
-      await api.delete(`/todos/${id}`);
-      setRefresh(!refresh);
-    } catch (err) {}
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+      } else {
+        const source = {uri: response.uri};
+
+        setImgSource(source);
+      }
+    });
   }
 
   return (
     <Container>
-      <TouchableOpacity
-        style={{position: 'absolute', left: '90%', top: '1%'}}
-        onPress={() => navigation.navigate('ImageEditor')}>
-        <FeIcon name="image" size={20} color="#138a72" />
-      </TouchableOpacity>
-
       <Image
         source={logo}
         resizeMode="contain"
-        style={{height: 80, width: 80, marginTop: '15%'}}
+        style={{height: 140, width: 140}}
       />
 
-      <FormView>
-        <Form ref={formRef} onSubmit={handleSubmit}>
-          <Label title="What do you have to do?" />
-          <InputDiv>
-            <Input
-              id="title"
-              name="title"
-              onSubmitEditing={() => formRef.current.submitForm()}
-              style={{paddingRight: 25}}
-            />
-            <MiIcon
-              name="send"
-              color="#138a72"
-              size={22}
-              style={{position: 'relative', left: -20}}
-              onPress={() => formRef.current.submitForm()}
-            />
-          </InputDiv>
-        </Form>
-      </FormView>
+      <Content>
+        <Division>
+          <Title>Dados Pessoais</Title>
+          <Duo>
+            <Strong>Nome: </Strong>
+            <Text>{user.name}</Text>
+          </Duo>
+          <Duo>
+            <Strong>Idade: </Strong>
+            <Text>{user.age}</Text>
+          </Duo>
+          <Duo>
+            <Strong>Telefone: </Strong>
+            <Text>{user.phone}</Text>
+          </Duo>
+          <Duo>
+            <Strong>Email: </Strong>
+            <Text>{user.email}</Text>
+          </Duo>
+        </Division>
 
-      <List>
-        <ScrollView style={{height: '100%'}}>
-          {todos.map((todo) => (
-            <Item key={todo._id}>
-              <Label title={todo.title} />
-              <OcIcon
-                name="x"
-                size={22}
-                color="#138a72"
-                style={{position: 'relative', left: -20}}
-                onPress={() => handleDelete(todo._id)}
-              />
-            </Item>
-          ))}
-        </ScrollView>
-      </List>
+        <Division>
+          <Title>Dados Profissionais</Title>
+          <Duo>
+            <Strong>Profissão: </Strong>
+            <Text>{user.role}</Text>
+          </Duo>
+          <Duo>
+            <Strong>Experiência: </Strong>
+            <Text>{user.experience}</Text>
+          </Duo>
+          <Duo>
+            <Strong>Localização: </Strong>
+            <Text>{user.city + ' - ' + user.state}</Text>
+          </Duo>
+        </Division>
+
+        <Division style={{borderBottomColor: '#ffffff00'}}>
+          <Title>Arquivos</Title>
+          <Duo>
+            {files !== null ? (
+              <Text>{files.length + ' arquivos'}</Text>
+            ) : (
+              <Text style={{position: 'relative', top: '10%', left: '400%'}}>
+                Ainda não há arquivos
+              </Text>
+            )}
+          </Duo>
+        </Division>
+      </Content>
+
+      {imgSource === '' && (
+        <Button title="Adicionar arquivo" onPress={() => pickImage()} />
+      )}
     </Container>
   );
 }

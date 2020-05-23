@@ -7,28 +7,39 @@ export const Container = styled.View`
   align-items: center;
 `;
 
-export const FormView = styled.View`
-  width: 80%;
-  justify-content: space-around;
-  margin-top: 10%;
+export const Content = styled.View`
+  height: 70%;
+  width: 90%;
 `;
 
-export const InputDiv = styled.View`
-  flex-direction: row;
-  align-items: center;
-`;
-
-export const List = styled.View`
-  margin-top: 20%;
-  width: 80%;
-  height: 45%;
-`;
-
-export const Item = styled.View`
-  height: 50px;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
+export const Division = styled.View`
+  width: 100%;
   border-bottom-color: #138a72;
   border-bottom-width: 1px;
+  margin-top: 2%;
+`;
+
+export const Title = styled.Text`
+  color: #138a72;
+  font-size: 26px;
+  font-family: 'Raleway-Black';
+  align-self: center;
+  margin-bottom: 10px;
+`;
+
+export const Duo = styled.View`
+  flex-direction: row;
+  margin-bottom: 2%;
+`;
+
+export const Strong = styled.Text`
+  color: #138a72;
+  font-size: 18px;
+  font-family: 'Raleway-Bold';
+`;
+
+export const Text = styled.Text`
+  color: #138a72;
+  font-size: 18px;
+  font-family: 'Raleway-Regular';
 `;
