@@ -1,12 +1,14 @@
 import React, {useRef, useState, useEffect} from 'react';
-import {Image, TouchableOpacity, ScrollView} from 'react-native';
+import {Image} from 'react-native';
 import {useSelector} from 'react-redux';
-import ImagePicker from 'react-native-image-picker';
+
+import FilePickerManager from 'react-native-file-picker';
 
 import {differenceInYears, parseISO} from 'date-fns';
 
 import Button from '../../components/Button';
-import api from '~/services/api';
+import api from '../../services/api';
+import Axios from 'axios';
 import {Container, Content, Division, Title, Strong, Text, Duo} from './styles';
 import logo from '../../assets/salvus.png';
 
@@ -14,7 +16,8 @@ export default function Main({navigation}) {
   const [imgSource, setImgSource] = useState('');
 
   const [user, setUser] = useState(useSelector((state) => state.user.profile));
-  const [files, setFiles] = useState(null);
+  const [file, setFile] = useState(null);
+  const [fileList, setFileList] = useState([]);
 
   useEffect(() => {
     function loadUser() {
@@ -28,22 +31,48 @@ export default function Main({navigation}) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  function pickImage() {
-    ImagePicker.showImagePicker((response) => {
+  useEffect(() => {
+    uploadFile();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [file]);
+
+  function pickFile() {
+    FilePickerManager.showFilePicker(null, (response) => {
       console.log('Response = ', response);
 
       if (response.didCancel) {
-        console.log('User cancelled image picker');
+        console.log('User cancelled file picker');
       } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
+        console.log('FilePickerManager Error: ', response.error);
       } else {
-        const source = {uri: response.uri};
-
-        setImgSource(source);
+        setFile(response);
+        console.tron.log(response);
       }
     });
+  }
+
+  async function uploadFile() {
+    const data = new FormData();
+
+    data.append('file', {
+      fileName: file.fileName,
+      uri: file.uri,
+      path: file.path,
+      type: file.type,
+    });
+    try {
+      Axios({
+        method: 'post',
+        url: 'http://192.168.15.10:3333/files',
+        data,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+    } catch (err) {
+      console.tron.log(err);
+    }
   }
 
   return (
@@ -102,8 +131,8 @@ export default function Main({navigation}) {
         <Division style={{borderBottomColor: '#ffffff00'}}>
           <Title>Arquivos</Title>
           <Duo>
-            {files !== null ? (
-              <Text>{files.length + ' arquivos'}</Text>
+            {file !== null ? (
+              <Text>{'X arquivos'}</Text>
             ) : (
               <Text style={{position: 'relative', top: '5%', left: '400%'}}>
                 Ainda não há arquivos
@@ -113,9 +142,7 @@ export default function Main({navigation}) {
         </Division>
       </Content>
 
-      {imgSource === '' && (
-        <Button title="Adicionar arquivo" onPress={() => pickImage()} />
-      )}
+      <Button title="Adicionar arquivo" onPress={() => pickFile()} />
     </Container>
   );
 }

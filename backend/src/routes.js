@@ -22,5 +22,6 @@ routes.put('/users', UserController.update);
 routes.delete('/users', UserController.destroy);
 
 routes.post('/files', upload.single('file'), FileController.store);
+routes.get('/files', FileController.index);
 
 export default routes;

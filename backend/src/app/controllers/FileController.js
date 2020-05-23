@@ -4,6 +4,8 @@ class FileController {
   async store(req, res) {
     const { originalname: name, filename: path } = req.file;
 
+    console.log(req.file);
+
     const file = await File.create({
       name,
       path,
@@ -11,6 +13,10 @@ class FileController {
     });
 
     return res.json(file);
+  }
+
+  async index(req, res) {
+    const userFiles = File.findAll({ where: { user_id: req.userId } });
   }
 }
 
