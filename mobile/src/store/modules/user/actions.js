@@ -15,3 +15,10 @@ export function updateProfileFailure() {
     type: '@user/UPDATE_PROFILE_FAILURE',
   };
 }
+
+export function uploadFileRequest(data) {
+  return {
+    type: '@user/UPLOAD_FILE_REQUEST',
+    payload: data,
+  };
+}

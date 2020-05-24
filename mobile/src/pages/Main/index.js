@@ -1,22 +1,18 @@
-import React, {useRef, useState, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Image} from 'react-native';
 import {useSelector} from 'react-redux';
 
-import FilePickerManager from 'react-native-file-picker';
+import api from '../../services/api';
 
+import ImagePicker from 'react-native-image-picker';
 import {differenceInYears, parseISO} from 'date-fns';
 
 import Button from '../../components/Button';
-import api from '../../services/api';
-import Axios from 'axios';
 import {Container, Content, Division, Title, Strong, Text, Duo} from './styles';
 import logo from '../../assets/salvus.png';
 
 export default function Main({navigation}) {
-  const [imgSource, setImgSource] = useState('');
-
   const [user, setUser] = useState(useSelector((state) => state.user.profile));
-  const [file, setFile] = useState(null);
   const [fileList, setFileList] = useState([]);
 
   useEffect(() => {
@@ -31,49 +27,32 @@ export default function Main({navigation}) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    uploadFile();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [file]);
-
-  function pickFile() {
-    FilePickerManager.showFilePicker(null, (response) => {
+  function pickImage() {
+    ImagePicker.showImagePicker(async (response) => {
       console.log('Response = ', response);
 
       if (response.didCancel) {
-        console.log('User cancelled file picker');
+        console.log('User cancelled image picker');
       } else if (response.error) {
-        console.log('FilePickerManager Error: ', response.error);
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
       } else {
-        setFile(response);
-        console.tron.log(response);
+        await api.post('files', {base64: response.data});
       }
     });
   }
 
-  async function uploadFile() {
-    const data = new FormData();
-
+  /*async function uploadFile() {
+     const data = new FormData();
     data.append('file', {
       fileName: file.fileName,
       uri: file.uri,
       path: file.path,
       type: file.type,
     });
-    try {
-      Axios({
-        method: 'post',
-        url: 'http://192.168.15.10:3333/files',
-        data,
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-    } catch (err) {
-      console.tron.log(err);
-    }
-  }
+  dispatch(uploadFileRequest(data));
+  }*/
 
   return (
     <Container>
@@ -131,7 +110,7 @@ export default function Main({navigation}) {
         <Division style={{borderBottomColor: '#ffffff00'}}>
           <Title>Arquivos</Title>
           <Duo>
-            {file !== null ? (
+            {fileList !== null ? (
               <Text>{'X arquivos'}</Text>
             ) : (
               <Text style={{position: 'relative', top: '5%', left: '400%'}}>
@@ -142,7 +121,7 @@ export default function Main({navigation}) {
         </Division>
       </Content>
 
-      <Button title="Adicionar arquivo" onPress={() => pickFile()} />
+      <Button title="Adicionar arquivo" onPress={() => pickImage()} />
     </Container>
   );
 }

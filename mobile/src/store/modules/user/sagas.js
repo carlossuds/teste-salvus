@@ -23,4 +23,21 @@ export function* updateProfile({payload}) {
   }
 }
 
-export default all([takeLatest('@user/UPDATE_PROFILE_REQUEST', updateProfile)]);
+export function* uploadFileRequest({payload}) {
+  try {
+    const {data} = payload;
+
+    console.tron.log(payload);
+
+    yield call(api.post, 'files', data);
+    Alert.alert('Sucesso');
+  } catch (err) {
+    console.tron.log(err);
+    Alert.alert('Fail');
+  }
+}
+
+export default all([
+  takeLatest('@user/UPDATE_PROFILE_REQUEST', updateProfile),
+  takeLatest('@user/UPLOAD_FILE_REQUEST', uploadFileRequest),
+]);
