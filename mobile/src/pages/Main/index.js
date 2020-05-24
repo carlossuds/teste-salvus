@@ -14,6 +14,7 @@ import logo from '../../assets/salvus.png';
 export default function Main({navigation}) {
   const [user, setUser] = useState(useSelector((state) => state.user.profile));
   const [fileList, setFileList] = useState([]);
+  const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
     function loadUser() {
@@ -23,9 +24,14 @@ export default function Main({navigation}) {
 
       setUser({...user, age});
     }
+    async function loadFiles() {
+      const response = await api.get('files');
+      setFileList(response.data);
+    }
     loadUser();
+    loadFiles();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [refresh]);
 
   function pickImage() {
     ImagePicker.showImagePicker(async (response) => {
@@ -39,6 +45,7 @@ export default function Main({navigation}) {
         console.log('User tapped custom button: ', response.customButton);
       } else {
         await api.post('files', {base64: response.data});
+        setRefresh(!refresh);
       }
     });
   }
@@ -111,7 +118,16 @@ export default function Main({navigation}) {
           <Title>Arquivos</Title>
           <Duo>
             {fileList !== null ? (
-              <Text>{'X arquivos'}</Text>
+              <>
+                {fileList.map((file) => (
+                  <Image
+                    source={{uri: `data:image/gif;base64,${file.base64}`}}
+                    resizeMode="contain"
+                    style={{height: 60, width: 60}}
+                    key={file.index}
+                  />
+                ))}
+              </>
             ) : (
               <Text style={{position: 'relative', top: '5%', left: '400%'}}>
                 Ainda não há arquivos

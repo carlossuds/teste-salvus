@@ -3,13 +3,14 @@ import fs from 'fs';
 import path from 'path';
 import File from '../models/File';
 
+const filepath = path.join(process.cwd(), '/tmp/uploads/');
+
 class FileController {
   async store(req, res) {
-    const filepath = path.join(process.cwd(), '/tmp/uploads');
     const { base64 } = req.body;
     const name = Date.now() + '.jpg';
 
-    fs.writeFile(filepath + name, base64, 'base64', function (err, data) {
+    fs.writeFileSync(filepath + name, base64, 'base64', function (err, data) {
       if (err) {
         console.log('err', err);
       }
@@ -26,8 +27,16 @@ class FileController {
 
   async index(req, res) {
     const userFiles = await File.findAll({ where: { user_id: req.userId } });
+    let count = 0;
 
-    return res.json(userFiles);
+    const listinha = userFiles.map((file) => {
+      return {
+        base64: fs.readFileSync(filepath + file.name, { encoding: 'base64' }),
+        index: count++,
+      };
+    });
+
+    return res.json(listinha);
   }
 }
 
